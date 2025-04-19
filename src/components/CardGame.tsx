@@ -13,12 +13,12 @@ export const CardGame = () => {
 
 	const totalWords = words.length
 	const memorizedWords = words.filter(w => w.is_memorized).length
-	const unmemorizedWords = totalWords - memorizedWords
+	// const unmemorizedWords = totalWords - memorizedWords
 
 	const getRandomIndex = () => {
-		const unmemorized = words.filter(w => /*!w.is_memorized*/ true)
-		const pool = unmemorized.length > 0 ? unmemorized : words
-		const randomWord = pool[Math.floor(Math.random() * pool.length)]
+		// const unmemorized = words.filter(w => !w.is_memorized)
+		// const pool = unmemorized.length > 0 ? unmemorized : words
+		const randomWord = words[Math.floor(Math.random() * words.length)]
 		return words.findIndex(w => w.id === randomWord.id)
 	}
 

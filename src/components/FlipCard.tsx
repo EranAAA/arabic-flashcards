@@ -9,7 +9,7 @@ type FlipCardProps = {
    isMemorized?: boolean // ✅ NEW
  }
  
-const CardWrapper = styled(Box)(({ theme }) => ({
+const CardWrapper = styled(Box)(() => ({
   perspective: '1000px',
   width: '100%',
   maxWidth: '250px',
