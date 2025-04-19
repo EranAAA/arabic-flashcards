@@ -2,12 +2,13 @@ import React from 'react'
 import { Box, Typography, styled } from '@mui/material'
 
 type FlipCardProps = {
-  arabic: string
-  hebrew: string
-  flipped: boolean
-  onFlip: () => void
-}
-
+   arabic: string
+   hebrew: string
+   flipped: boolean
+   onFlip: () => void
+   isMemorized?: boolean // ✅ NEW
+ }
+ 
 const CardWrapper = styled(Box)(({ theme }) => ({
   perspective: '1000px',
   width: '100%',
@@ -55,17 +56,39 @@ const Back = styled(CardFace)(({ theme }) => ({
   transform: 'rotateY(180deg)',
 }))
 
-export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, flipped, onFlip }) => {
+export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, isMemorized, flipped, onFlip }) => {
   return (
-    <CardWrapper onClick={onFlip}>
-      <CardInner flipped={flipped}>
-        <Front>
-          <Typography variant="h5">{arabic}</Typography>
-        </Front>
-        <Back>
-          <Typography variant="h5">{hebrew}</Typography>
-        </Back>
-      </CardInner>
-    </CardWrapper>
+   <CardWrapper onClick={onFlip}>
+
+   {isMemorized && (
+     <Box
+       sx={{
+         position: 'absolute',
+         top: 8,
+         right: 8,
+         zIndex: 10,
+         bgcolor: 'success.main',
+         color: 'white',
+         fontSize: '0.75rem',
+         fontWeight: 'bold',
+         px: 1,
+         py: 0.5,
+         borderRadius: 1,
+       }}
+     >
+       Memorized
+     </Box>
+   )}
+ 
+   <CardInner flipped={flipped}>
+     <Front>
+       <Typography variant="h5">{arabic}</Typography>
+     </Front>
+     <Back>
+       <Typography variant="h5">{hebrew}</Typography>
+     </Back>
+   </CardInner>
+ </CardWrapper>
+ 
   )
 }

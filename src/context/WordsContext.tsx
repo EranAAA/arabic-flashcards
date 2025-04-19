@@ -5,13 +5,18 @@ type Word = {
 	id: string
 	arabic: string
 	hebrew: string
+	is_memorized?: boolean
 }
 
 type WordsContextType = {
 	words: Word[]
+	setWords: React.Dispatch<React.SetStateAction<Word[]>>
 }
 
-const WordsContext = createContext<WordsContextType>({ words: [] })
+const WordsContext = createContext<WordsContextType>({
+	words: [],
+	setWords: () => {},
+})
 
 export const useWords = () => useContext(WordsContext)
 
@@ -26,5 +31,5 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 		fetchWords()
 	}, [])
 
-	return <WordsContext.Provider value={{ words }}>{children}</WordsContext.Provider>
+	return <WordsContext.Provider value={{ words, setWords }}>{children}</WordsContext.Provider>
 }
