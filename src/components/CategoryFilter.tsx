@@ -19,7 +19,7 @@ export const CategoryFilter = () => {
 	return (
 		<Box mb={3}>
 			<Typography variant='subtitle1' sx={{ color: "text.primary", mb: 1, textAlign: "center" }}>
-				Choose Category:
+				Choose Category
 			</Typography>
 			
 			<RadioGroup
