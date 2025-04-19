@@ -36,7 +36,7 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 	const filteredWords = useMemo(() => {
 		return selectedCategory === "all" ? words : words.filter(w => w.category === selectedCategory)
 	}, [words, selectedCategory])
-
+	
 	useEffect(() => {
 		const fetchWords = async () => {
 			const { data, error } = await supabase.from("words").select("*")

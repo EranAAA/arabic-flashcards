@@ -46,7 +46,8 @@ const CardFace = styled(Box)(({ theme }) => ({
 }))
 
 const Front = styled(CardFace)(({ theme }) => ({
-  backgroundColor: theme.palette.grey[100],
+  // backgroundColor: theme.palette.grey[100],
+  backgroundColor: "grey",
   color: theme.palette.text.primary,
 }))
 
@@ -68,7 +69,7 @@ export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, isMemorized,
          right: 8,
          zIndex: 10,
          bgcolor: 'success.main',
-         color: 'white',
+         color: 'green',
          fontSize: '0.75rem',
          fontWeight: 'bold',
          px: 1,
