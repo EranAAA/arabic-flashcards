@@ -7,6 +7,8 @@ type FlipCardProps = {
 	flipped: boolean
 	onFlip: () => void
 	isMemorized?: boolean // ✅ NEW
+	sentence_ar?: string
+	sentence_he?: string
 }
 
 const CardWrapper = styled(Box)(() => ({
@@ -45,6 +47,7 @@ const CardFace = styled(Box)(({ theme }) => ({
 	backgroundColor: theme.palette.background.paper,
 	color: theme.palette.text.primary,
 	transition: "background-color 0.3s, color 0.3s, transform 0.6s",
+	flexDirection: "column",
 }))
 
 const MemorizedChip = styled(Box)(({ theme }) => ({
@@ -83,7 +86,7 @@ const CheckTranslateButton = styled(Button)(() => ({
 	fontSize: "10px",
 }))
 
-export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, isMemorized, flipped, onFlip }) => {
+export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, sentence_ar, sentence_he, isMemorized, flipped, onFlip }) => {
 	const handleCheckTranslate = (e: any) => {
 		e.stopPropagation() // so it doesn't flip
 		window.open(`https://milon.madrasafree.com/?searchString=${encodeURIComponent(hebrew)}`, "_blank")
@@ -95,12 +98,18 @@ export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, isMemorized,
 			<CardInner flipped={flipped}>
 				<Front>
 					<Typography variant='h5'>{arabic}</Typography>
+					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic", direction: "rtl" }}>
+						{sentence_ar}
+					</Typography>
 				</Front>
 				<Back>
 					<CheckTranslateButton size='small' onClick={handleCheckTranslate}>
 						Check Translate
 					</CheckTranslateButton>
 					<Typography variant='h5'>{hebrew}</Typography>
+					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic", direction: "rtl" }}>
+						{sentence_he}
+					</Typography>
 				</Back>
 			</CardInner>
 		</CardWrapper>

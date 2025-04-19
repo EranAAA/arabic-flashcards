@@ -9,7 +9,9 @@ type Word = {
 	hebrew: string
 	is_memorized?: boolean
 	category?: WordCategory
-}
+	sentence_ar?: string
+	sentence_he?: string
+ } 
 
 type CategoryProgress = {
 	category: WordCategory

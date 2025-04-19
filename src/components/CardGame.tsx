@@ -53,9 +53,11 @@ export const CardGame = () => {
 					<FlipCard
 						arabic={currentWord.arabic}
 						hebrew={currentWord.hebrew}
-						isMemorized={currentWord.is_memorized}
+						sentence_ar={currentWord.sentence_ar}
+						sentence_he={currentWord.sentence_he}
 						flipped={flipped}
 						onFlip={() => setFlipped(prev => !prev)}
+						isMemorized={currentWord.is_memorized}
 					/>
 
 					<Box mt={2}>
