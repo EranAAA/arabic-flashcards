@@ -12,8 +12,8 @@ type FlipCardProps = {
 const CardWrapper = styled(Box)(() => ({
 	perspective: "1000px",
 	width: "100%",
-	maxWidth: "250px",
-	height: "200px",
+	maxWidth: "320px", // wider than 250px
+	height: "240px",
 	margin: "0 auto",
 	cursor: "pointer",
 }))
@@ -31,36 +31,40 @@ const CardInner = styled(Box, {
 
 const CardFace = styled(Box)(({ theme }) => ({
 	position: "absolute",
-	width: "-webkit-fill-available",
+	width: "100%",
 	height: "100%",
-	borderRadius: theme.shape.borderRadius,
+	borderRadius: theme.shape.borderRadius * 2, // extra roundness
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	padding: theme.spacing(2),
-	boxShadow: theme.shadows[3],
-	fontSize: "1.5rem",
-	fontWeight: 600,
-	backfaceVisibility: "hidden",
+	padding: theme.spacing(3),
 	textAlign: "center",
+	backfaceVisibility: "hidden",
+	boxShadow: theme.shadows[6], // stronger shadow
+	border: `1px solid ${theme.palette.divider}`, // subtle border
+	backgroundColor: theme.palette.background.paper,
+	color: theme.palette.text.primary,
+	transition: "background-color 0.3s, color 0.3s, transform 0.6s",
 }))
 
-const MemorizedChip = styled(Box)(() => ({
+const MemorizedChip = styled(Box)(({ theme }) => ({
 	position: "absolute",
 	top: 8,
 	right: 8,
 	zIndex: 10,
-	color: "green",
-	fontSize: "0.75rem",
-	fontWeight: "bold",
-	px: 1,
+	px: 1.5,
 	py: 0.5,
-	borderRadius: 1,
+	fontSize: "0.75rem",
+	fontWeight: 600,
+	borderRadius: theme.shape.borderRadius,
+	color: theme.palette.success.contrastText,
+	backgroundColor: theme.palette.success.main,
+	boxShadow: theme.shadows[2],
+	padding: "2px 5px",
 }))
 
 const Front = styled(CardFace)(({ theme }) => ({
-	// backgroundColor: theme.palette.grey[100],
-	backgroundColor: "grey",
+	backgroundColor: theme.palette.background.paper,
 	color: theme.palette.text.primary,
 }))
 
@@ -76,7 +80,7 @@ const CheckTranslateButton = styled(Button)(() => ({
 	right: 0,
 	mt: 1,
 	color: "black",
-  fontSize: "10px"
+	fontSize: "10px",
 }))
 
 export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, isMemorized, flipped, onFlip }) => {

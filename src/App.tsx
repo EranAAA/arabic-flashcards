@@ -1,29 +1,18 @@
-import { useMemo } from "react"
-import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material"
 import { Container } from "@mui/material"
 import { WordsProvider } from "./context/WordsContext"
+import { AppThemeProvider } from "./context/ThemeContext"
 import { CardGame } from "./components/CardGame"
+import { ThemeToggle } from "./components/ThemeToggle"
 
 export default function App() {
-	const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
-
-	const theme = useMemo(
-		() =>
-			createTheme({
-				palette: {
-					mode: prefersDarkMode ? "dark" : "light",
-				},
-			}),
-		[prefersDarkMode]
-	)
 	return (
-		<ThemeProvider theme={theme}>
-			<CssBaseline />
+		<AppThemeProvider>
 			<WordsProvider>
 				<Container sx={{ mt: 4 }}>
+					<ThemeToggle />
 					<CardGame />
 				</Container>
 			</WordsProvider>
-		</ThemeProvider>
+		</AppThemeProvider>
 	)
 }

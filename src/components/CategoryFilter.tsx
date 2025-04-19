@@ -2,16 +2,27 @@ import { Box, RadioGroup, FormControlLabel, Radio, Typography } from "@mui/mater
 import { useWords } from "../context/WordsContext"
 
 const categories = [
-	{ value: "all", label: "הכול" },
-	{ value: "greeting", label: "ברכות" },
-	{ value: "verb", label: "פעלים" },
-	{ value: "noun", label: "שמות עצם" },
-	{ value: "adjective", label: "תארים" },
-	{ value: "color", label: "צבעים" },
-	{ value: "possessive", label: "שייכות" },
-	{ value: "question", label: "שאלות" },
-	{ value: "expression", label: "ביטויים" },
+	{ value: "all", label: "all" },
+	{ value: "greeting", label: "greeting" },
+	{ value: "verb", label: "verb" },
+	{ value: "noun", label: "noun" },
+	{ value: "adjective", label: "adjective" },
+	{ value: "color", label: "color" },
+	{ value: "possessive", label: "possessive" },
+	{ value: "question", label: "question" },
+	{ value: "expression", label: "expression" },
 ]
+// const categories = [
+// 	{ value: "all", label: "הכול" },
+// 	{ value: "greeting", label: "ברכות" },
+// 	{ value: "verb", label: "פעלים" },
+// 	{ value: "noun", label: "שמות עצם" },
+// 	{ value: "adjective", label: "תארים" },
+// 	{ value: "color", label: "צבעים" },
+// 	{ value: "possessive", label: "שייכות" },
+// 	{ value: "question", label: "שאלות" },
+// 	{ value: "expression", label: "ביטויים" },
+// ]
 
 export const CategoryFilter = () => {
 	const { selectedCategory, setSelectedCategory } = useWords()
