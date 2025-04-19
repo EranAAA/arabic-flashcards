@@ -4,29 +4,29 @@ import BookmarkIcon from "@mui/icons-material/Bookmark"
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"
 import { useWords } from "../context/WordsContext"
 import { FlipCard } from "./FlipCard"
-import supabase from "../lib/supabaseClient"
+import { CategoryFilter } from "./CategoryFilter"
 
 export const CardGame = () => {
-	const { words, setWords } = useWords()
+	const { filteredWords, markAsMemorized } = useWords()
+
 	const [currentIndex, setCurrentIndex] = useState<number | null>(null)
 	const [flipped, setFlipped] = useState(false)
 
-	const totalWords = words.length
-	const memorizedWords = words.filter(w => w.is_memorized).length
+	const totalWords = filteredWords.length
+	const memorizedWords = filteredWords.filter(w => w.is_memorized).length
 	// const unmemorizedWords = totalWords - memorizedWords
 
 	const getRandomIndex = () => {
-		// const unmemorized = words.filter(w => !w.is_memorized)
-		// const pool = unmemorized.length > 0 ? unmemorized : words
-		const randomWord = words[Math.floor(Math.random() * words.length)]
-		return words.findIndex(w => w.id === randomWord.id)
+		if (filteredWords.length === 0) return null
+		const randomWord = filteredWords[Math.floor(Math.random() * filteredWords.length)]
+		return filteredWords.findIndex(w => w.id === randomWord.id)
 	}
 
 	useEffect(() => {
-		if (words.length > 0) {
+		if (filteredWords.length > 0) {
 			setCurrentIndex(getRandomIndex())
 		}
-	}, [words])
+	}, [filteredWords])
 
 	const showNextCard = () => {
 		setFlipped(false)
@@ -36,19 +36,15 @@ export const CardGame = () => {
 		}, 100) // matches flip animation time
 	}
 
-	const markAsMemorized = async (id: string, newValue: boolean) => {
-		await supabase.from("words").update({ is_memorized: newValue }).eq("id", id)
-
-		setWords(prev => prev.map(w => (w.id === id ? { ...w, is_memorized: newValue } : w)))
-	}
-
-	const currentWord = currentIndex !== null ? words[currentIndex] : null
+	const currentWord = currentIndex !== null ? filteredWords[currentIndex] : null
 
 	return (
 		<Box textAlign='center' mt={4}>
 			<Typography variant='h4' gutterBottom>
 				Arabic Flashcards
 			</Typography>
+
+			<CategoryFilter />
 
 			{currentWord ? (
 				<Box mb={3}>
@@ -82,7 +78,7 @@ export const CardGame = () => {
 
 			{/* ✅ Always show the button */}
 			<Box mt={3}>
-				<Button variant='contained' onClick={showNextCard} disabled={words.length === 0}>
+				<Button variant='contained' onClick={showNextCard} disabled={filteredWords.length === 0}>
 					Next Word
 				</Button>
 			</Box>
