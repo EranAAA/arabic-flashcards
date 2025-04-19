@@ -1,4 +1,4 @@
-import { Box, FormLabel, RadioGroup, FormControlLabel, Radio, Typography } from "@mui/material"
+import { Box, RadioGroup, FormControlLabel, Radio, Typography } from "@mui/material"
 import { useWords } from "../context/WordsContext"
 
 const categories = [
@@ -21,7 +21,7 @@ export const CategoryFilter = () => {
 			<Typography variant='subtitle1' sx={{ color: "text.primary", mb: 1, textAlign: "center" }}>
 				Choose Category
 			</Typography>
-			
+
 			<RadioGroup
 				row
 				value={selectedCategory}
