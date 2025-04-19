@@ -11,18 +11,26 @@ type Word = {
 	category?: WordCategory
 }
 
+type CategoryProgress = {
+	category: WordCategory
+	total: number
+	memorized: number
+}
+
 type WordsContextType = {
 	words: Word[]
 	filteredWords: Word[]
 	selectedCategory: WordCategory
 	setSelectedCategory: (value: WordCategory) => void
 	markAsMemorized: (id: string, newValue: boolean) => Promise<void>
+	categoryProgress: CategoryProgress[]
 }
 
 const WordsContext = createContext<WordsContextType>({
 	words: [],
 	filteredWords: [],
 	selectedCategory: "all",
+	categoryProgress: [],
 	setSelectedCategory: () => {},
 	markAsMemorized: async () => {},
 })
@@ -36,7 +44,7 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 	const filteredWords = useMemo(() => {
 		return selectedCategory === "all" ? words : words.filter(w => w.category === selectedCategory)
 	}, [words, selectedCategory])
-	
+
 	useEffect(() => {
 		const fetchWords = async () => {
 			const { data, error } = await supabase.from("words").select("*")
@@ -47,9 +55,30 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const markAsMemorized = async (id: string, newValue: boolean) => {
 		await supabase.from("words").update({ is_memorized: newValue }).eq("id", id)
-
 		setWords(prev => prev.map(w => (w.id === id ? { ...w, is_memorized: newValue } : w)))
 	}
+
+	const categoryProgress = useMemo<CategoryProgress[]>(() => {
+		const groups: Record<WordCategory, { total: number; memorized: number }> = {} as any
+
+		for (const word of words) {
+			if (!word.category) continue
+			const cat = word.category
+
+			if (!groups[cat]) {
+				groups[cat] = { total: 0, memorized: 0 }
+			}
+
+			groups[cat].total++
+			if (word.is_memorized) groups[cat].memorized++
+		}
+
+		return Object.entries(groups).map(([category, { total, memorized }]) => ({
+			category: category as WordCategory,
+			total,
+			memorized,
+		}))
+	}, [words])
 
 	return (
 		<WordsContext.Provider
@@ -57,6 +86,7 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 				words,
 				filteredWords,
 				selectedCategory,
+				categoryProgress,
 				setSelectedCategory,
 				markAsMemorized,
 			}}

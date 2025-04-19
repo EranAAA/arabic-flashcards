@@ -69,7 +69,7 @@ const Front = styled(CardFace)(({ theme }) => ({
 }))
 
 const Back = styled(CardFace)(({ theme }) => ({
-	backgroundColor: theme.palette.primary.main,
+	backgroundColor: theme.palette.primary.light,
 	color: theme.palette.primary.contrastText,
 	transform: "rotateY(180deg)",
 }))

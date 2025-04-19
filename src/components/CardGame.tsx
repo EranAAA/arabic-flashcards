@@ -5,6 +5,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"
 import { useWords } from "../context/WordsContext"
 import { FlipCard } from "./FlipCard"
 import { CategoryFilter } from "./CategoryFilter"
+import { CategoryProgress } from "./CategoryProgress"
 
 export const CardGame = () => {
 	const { filteredWords, markAsMemorized } = useWords()
@@ -39,12 +40,9 @@ export const CardGame = () => {
 	const currentWord = currentIndex !== null ? filteredWords[currentIndex] : null
 
 	return (
-		<Box textAlign='center' mt={4}>
-			<Typography variant='h4' gutterBottom>
-				Arabic Flashcards
-			</Typography>
-
+		<Box textAlign='center'>
 			<CategoryFilter />
+			<CategoryProgress />
 
 			{currentWord ? (
 				<Box mb={3}>
@@ -62,6 +60,7 @@ export const CardGame = () => {
 
 					<Box mt={2}>
 						<Button
+							size='small'
 							variant='contained'
 							startIcon={currentWord.is_memorized ? <BookmarkIcon /> : <BookmarkBorderIcon />}
 							onClick={() => markAsMemorized(currentWord.id, !currentWord.is_memorized)}
@@ -78,7 +77,7 @@ export const CardGame = () => {
 
 			{/* ✅ Always show the button */}
 			<Box mt={3}>
-				<Button variant='contained' onClick={showNextCard} disabled={filteredWords.length === 0}>
+				<Button size='small' variant='contained' onClick={showNextCard} disabled={filteredWords.length === 0}>
 					Next Word
 				</Button>
 			</Box>

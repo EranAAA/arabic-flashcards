@@ -1,16 +1,16 @@
-import { Box, RadioGroup, FormControlLabel, Radio, Typography } from "@mui/material"
+import { Box, Select, MenuItem, InputLabel, FormControl } from "@mui/material"
 import { useWords } from "../context/WordsContext"
 
 const categories = [
 	{ value: "all", label: "all" },
-	{ value: "greeting", label: "greeting" },
-	{ value: "verb", label: "verb" },
-	{ value: "noun", label: "noun" },
-	{ value: "adjective", label: "adjective" },
-	{ value: "color", label: "color" },
-	{ value: "possessive", label: "possessive" },
-	{ value: "question", label: "question" },
-	{ value: "expression", label: "expression" },
+	{ value: "greeting", label: "greeting (ברכות)" },
+	{ value: "verb", label: "verb (פעלים)" },
+	{ value: "noun", label: "noun (שמות עצם)" },
+	{ value: "adjective", label: "adjective (תארים)" },
+	{ value: "color", label: "color (צבעים)" },
+	{ value: "possessive", label: "possessive (שייכות)" },
+	{ value: "question", label: "question (שאלות)" },
+	{ value: "expression", label: "expression (ביטויים)" },
 ]
 // const categories = [
 // 	{ value: "all", label: "הכול" },
@@ -28,21 +28,23 @@ export const CategoryFilter = () => {
 	const { selectedCategory, setSelectedCategory } = useWords()
 
 	return (
-		<Box mb={3}>
-			<Typography variant='subtitle1' sx={{ color: "text.primary", mb: 1, textAlign: "center" }}>
-				Choose Category
-			</Typography>
-
-			<RadioGroup
-				row
-				value={selectedCategory}
-				onChange={e => setSelectedCategory(e.target.value as typeof selectedCategory)}
-				sx={{ justifyContent: "center" }} // ✅ added style
-			>
-				{categories.map(cat => (
-					<FormControlLabel key={cat.value} value={cat.value} control={<Radio />} label={cat.label} />
-				))}
-			</RadioGroup>
+		<Box mb={3} width='100%' maxWidth={300} mx='auto'>
+			<FormControl fullWidth size='small'>
+				<InputLabel id='category-select-label'>Choose Category</InputLabel>
+				<Select
+					labelId='category-select-label'
+					value={selectedCategory}
+					onChange={e => setSelectedCategory(e.target.value as typeof selectedCategory)}
+					label='Choose Category'
+					sx={{ textTransform: "capitalize" }}
+				>
+					{categories.map(cat => (
+						<MenuItem key={cat.value} value={cat.value} sx={{ textTransform: "capitalize" }}>
+							{cat.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
 		</Box>
 	)
 }
