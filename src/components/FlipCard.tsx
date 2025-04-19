@@ -1,95 +1,104 @@
-import React from 'react'
-import { Box, Typography, styled } from '@mui/material'
+import React from "react"
+import { Box, Typography, styled, Button } from "@mui/material"
 
 type FlipCardProps = {
-   arabic: string
-   hebrew: string
-   flipped: boolean
-   onFlip: () => void
-   isMemorized?: boolean // ✅ NEW
- }
- 
+	arabic: string
+	hebrew: string
+	flipped: boolean
+	onFlip: () => void
+	isMemorized?: boolean // ✅ NEW
+}
+
 const CardWrapper = styled(Box)(() => ({
-  perspective: '1000px',
-  width: '100%',
-  maxWidth: '250px',
-  height: '200px',
-  margin: '0 auto',
-  cursor: 'pointer',
+	perspective: "1000px",
+	width: "100%",
+	maxWidth: "250px",
+	height: "200px",
+	margin: "0 auto",
+	cursor: "pointer",
 }))
 
 const CardInner = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'flipped',
+	shouldForwardProp: prop => prop !== "flipped",
 })<{ flipped: boolean }>(({ flipped }) => ({
-  position: 'relative',
-  width: '100%',
-  height: '100%',
-  transition: 'transform 0.6s',
-  transformStyle: 'preserve-3d',
-  transform: flipped ? 'rotateY(180deg)' : 'none',
+	position: "relative",
+	width: "100%",
+	height: "100%",
+	transition: "transform 0.6s",
+	transformStyle: "preserve-3d",
+	transform: flipped ? "rotateY(180deg)" : "none",
 }))
 
 const CardFace = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  width: '-webkit-fill-available',
-  height: '100%',
-  borderRadius: theme.shape.borderRadius,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: theme.spacing(2),
-  boxShadow: theme.shadows[3],
-  fontSize: '1.5rem',
-  fontWeight: 600,
-  backfaceVisibility: 'hidden',
-  textAlign: 'center',
+	position: "absolute",
+	width: "-webkit-fill-available",
+	height: "100%",
+	borderRadius: theme.shape.borderRadius,
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+	padding: theme.spacing(2),
+	boxShadow: theme.shadows[3],
+	fontSize: "1.5rem",
+	fontWeight: 600,
+	backfaceVisibility: "hidden",
+	textAlign: "center",
+}))
+
+const MemorizedChip = styled(Box)(() => ({
+	position: "absolute",
+	top: 8,
+	right: 8,
+	zIndex: 10,
+	color: "green",
+	fontSize: "0.75rem",
+	fontWeight: "bold",
+	px: 1,
+	py: 0.5,
+	borderRadius: 1,
 }))
 
 const Front = styled(CardFace)(({ theme }) => ({
-  // backgroundColor: theme.palette.grey[100],
-  backgroundColor: "grey",
-  color: theme.palette.text.primary,
+	// backgroundColor: theme.palette.grey[100],
+	backgroundColor: "grey",
+	color: theme.palette.text.primary,
 }))
 
 const Back = styled(CardFace)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.primary.contrastText,
-  transform: 'rotateY(180deg)',
+	backgroundColor: theme.palette.primary.main,
+	color: theme.palette.primary.contrastText,
+	transform: "rotateY(180deg)",
+}))
+
+const CheckTranslateButton = styled(Button)(() => ({
+	position: "absolute",
+	bottom: 0,
+	right: 0,
+	mt: 1,
+	color: "black",
+  fontSize: "10px"
 }))
 
 export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, isMemorized, flipped, onFlip }) => {
-  return (
-   <CardWrapper onClick={onFlip}>
+	const handleCheckTranslate = (e: any) => {
+		e.stopPropagation() // so it doesn't flip
+		window.open(`https://milon.madrasafree.com/?searchString=${encodeURIComponent(hebrew)}`, "_blank")
+	}
+	return (
+		<CardWrapper onClick={onFlip}>
+			{isMemorized && <MemorizedChip>Memorized</MemorizedChip>}
 
-   {isMemorized && (
-     <Box
-       sx={{
-         position: 'absolute',
-         top: 8,
-         right: 8,
-         zIndex: 10,
-         bgcolor: 'success.main',
-         color: 'green',
-         fontSize: '0.75rem',
-         fontWeight: 'bold',
-         px: 1,
-         py: 0.5,
-         borderRadius: 1,
-       }}
-     >
-       Memorized
-     </Box>
-   )}
- 
-   <CardInner flipped={flipped}>
-     <Front>
-       <Typography variant="h5">{arabic}</Typography>
-     </Front>
-     <Back>
-       <Typography variant="h5">{hebrew}</Typography>
-     </Back>
-   </CardInner>
- </CardWrapper>
- 
-  )
+			<CardInner flipped={flipped}>
+				<Front>
+					<Typography variant='h5'>{arabic}</Typography>
+				</Front>
+				<Back>
+					<CheckTranslateButton size='small' onClick={handleCheckTranslate}>
+						Check Translate
+					</CheckTranslateButton>
+					<Typography variant='h5'>{hebrew}</Typography>
+				</Back>
+			</CardInner>
+		</CardWrapper>
+	)
 }
