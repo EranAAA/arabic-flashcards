@@ -7,7 +7,7 @@ export const Logo = () => {
 	return (
 		<Box
 			sx={{
-				width: 160,
+				width: 130,
 				mx: "auto",
 				py: 2,
 				display: "flex",

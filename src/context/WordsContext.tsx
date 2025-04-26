@@ -32,6 +32,7 @@ type CategoryProgress = {
 
 type WordsContextType = {
 	words: Word[]
+	setWords: React.Dispatch<React.SetStateAction<Word[]>>
 	filteredWords: Word[]
 	selectedCategory: WordCategory
 	setSelectedCategory: (value: WordCategory) => void
@@ -45,6 +46,7 @@ const WordsContext = createContext<WordsContextType>({
 	selectedCategory: "all",
 	categoryProgress: [],
 	setSelectedCategory: () => {},
+	setWords: () => {},
 	markAsMemorized: async () => {},
 })
 
@@ -115,6 +117,7 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 		<WordsContext.Provider
 			value={{
 				words,
+				setWords,
 				filteredWords,
 				selectedCategory,
 				categoryProgress,

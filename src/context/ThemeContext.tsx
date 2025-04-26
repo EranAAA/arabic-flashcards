@@ -1,5 +1,9 @@
 import { createContext, useContext, useMemo, useState } from "react"
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material"
+import { CacheProvider } from "@emotion/react"
+import createCache from "@emotion/cache"
+import rtlPlugin from "stylis-plugin-rtl"
+import { prefixer } from "stylis"
 
 type Mode = "light" | "dark"
 
@@ -29,14 +33,21 @@ export const AppThemeProvider = ({ children }: { children: React.ReactNode }) =>
 		})
 	}
 
-	const theme = useMemo(() => createTheme({ palette: { mode } }), [mode])
+	const cacheRtl = createCache({
+		key: "muirtl",
+		stylisPlugins: [prefixer, rtlPlugin],
+	})
+
+	const theme = useMemo(() => createTheme({ palette: { mode }, direction: "rtl" }), [mode])
 
 	return (
-		<ThemeContext.Provider value={{ mode, toggleMode }}>
-			<ThemeProvider theme={theme}>
-				<CssBaseline />
-				{children}
-			</ThemeProvider>
-		</ThemeContext.Provider>
+		<CacheProvider value={cacheRtl}>
+			<ThemeContext.Provider value={{ mode, toggleMode }}>
+				<ThemeProvider theme={theme}>
+					<CssBaseline />
+					{children}
+				</ThemeProvider>
+			</ThemeContext.Provider>
+		</CacheProvider>
 	)
 }

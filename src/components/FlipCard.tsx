@@ -20,6 +20,7 @@ const CardWrapper = styled(Box)(() => ({
 	height: "240px",
 	margin: "0 auto",
 	cursor: "pointer",
+	direction: "ltr",
 }))
 
 const CardInner = styled(Box, {
@@ -31,7 +32,6 @@ const CardInner = styled(Box, {
 	transition: "transform 0.6s",
 	transformStyle: "preserve-3d",
 	transform: flipped ? "rotateY(180deg)" : "none",
-	direction: "rtl",
 }))
 
 const CardFace = styled(Box)(({ theme }) => ({
@@ -80,13 +80,12 @@ const Back = styled(CardFace)(({ theme }) => ({
 	transform: "rotateY(180deg)",
 }))
 
-const Info = styled("div")(({ bottom, right, top, left }: { bottom?: number; right?: number; top?: number; left?: number }) => ({
+const Info = styled(Typography)(({ bottom, right, top, left }: { bottom?: number; right?: number; top?: number; left?: number }) => ({
 	position: "absolute",
 	bottom: bottom ?? "unset",
 	right: right ?? "unset",
 	top: top ?? "unset",
 	left: left ?? "unset",
-	color: "black",
 	padding: "10px",
 	fontSize: "14px",
 }))
@@ -115,15 +114,15 @@ export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, sentence_ar,
 					<Typography variant='h5'>{arabic}</Typography>
 					{verbData && (
 						<Stack>
-							<Typography variant='body2' color='inherit' sx={{ fontStyle: "italic", direction: "rtl" }}>
+							<Typography variant='body2' color='inherit' sx={{ fontStyle: "italic" }}>
 								{"הווה: " + verbData.present}
 							</Typography>
-							<Typography variant='body2' color='inherit' sx={{ fontStyle: "italic", direction: "rtl" }}>
+							<Typography variant='body2' color='inherit' sx={{ fontStyle: "italic" }}>
 								{"עתיד: " + verbData.future}
 							</Typography>
 						</Stack>
 					)}
-					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic", direction: "rtl" }}>
+					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic" }}>
 						{sentence_ar}
 					</Typography>
 				</Front>
@@ -132,7 +131,7 @@ export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, sentence_ar,
 						{"בדוק מילה"}
 					</Info>
 					<Typography variant='h5'>{hebrew}</Typography>
-					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic", direction: "rtl" }}>
+					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic" }}>
 						{sentence_he}
 					</Typography>
 				</Back>

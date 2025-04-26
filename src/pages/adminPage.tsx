@@ -1,95 +1,250 @@
-import { useState } from "react"
-import { Button, Box } from "@mui/material"
-import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
+import { Box, Button, MenuItem } from "@mui/material"
+import { useSnackbar } from "notistack"
 import { useWords, Word } from "../context/WordsContext"
 import supabase from "../lib/supabaseClient"
+import { RtlTextField } from "../components/RtlTextField"
+import { categories } from "../components/CategoryFilter"
 
 export default function AdminPage() {
-	const { words } = useWords()
+	const location = useLocation()
+	const { enqueueSnackbar } = useSnackbar()
 
-	const [mode, setMode] = useState<"words" | "verbs">("words")
+	const { words, setWords } = useWords()
 
-	const handleRowEdit = async (updatedRow: Word) => {
-		if (updatedRow.category === "verb") {
-			await supabase
-				.from("verbs")
-				.update({
-					past: updatedRow.arabic,
-					hebrew: updatedRow.hebrew,
-					root: updatedRow.verb_data?.root,
-					binyan: updatedRow.verb_data?.binyan,
-					present: updatedRow.verb_data?.present,
-					future: updatedRow.verb_data?.future,
-					pronoun: updatedRow.verb_data?.pronoun,
-				})
-				.eq("id", updatedRow.id)
-		} else {
-			await supabase
-				.from("words")
-				.update({
-					arabic: updatedRow.arabic,
-					hebrew: updatedRow.hebrew,
-					category: updatedRow.category,
-					sentence_ar: updatedRow.sentence_ar,
-					sentence_he: updatedRow.sentence_he,
-				})
-				.eq("id", updatedRow.id)
+	const [selectedWordId, setSelectedWordId] = useState<string | null>(null)
+	const [currentWord, setCurrentWord] = useState<Partial<Word>>({})
+	const [loading, setLoading] = useState(false)
+
+	useEffect(() => {
+		const { state } = location
+		if (state && state.hasOwnProperty("currentWord")) {
+			setSelectedWordId(state?.currentWord?.id)
+			setCurrentWord(state?.currentWord)
 		}
-		// fetchAll()
-		return updatedRow // ✅ Important!
+	}, [location])
+
+	const handleSelectWord = (id: string) => {
+		const found = words.find(w => w.id === id)
+		if (found) {
+			setCurrentWord(found)
+			setSelectedWordId(id)
+		}
 	}
 
-	const wordColumns: GridColDef[] = [
-		{ field: "arabic", headerName: "Arabic", width: 150, editable: true },
-		{ field: "hebrew", headerName: "Hebrew", width: 150, editable: true },
-		{ field: "category", headerName: "Category", width: 120, editable: true },
-		{ field: "sentence_ar", headerName: "Sentence (Arabic)", width: 250, editable: true },
-		{ field: "sentence_he", headerName: "Sentence (Hebrew)", width: 250, editable: true },
-	]
+	const handleAddNew = () => {
+		setCurrentWord({})
+		setSelectedWordId(null)
+	}
 
-	const verbColumns: GridColDef[] = [
-		{ field: "arabic", headerName: "Past (Arabic)", width: 150, editable: true },
-		{ field: "hebrew", headerName: "Hebrew", width: 150, editable: true },
-		{ field: "root", headerName: "Root", width: 120, editable: true },
-		{ field: "binyan", headerName: "Binyan", width: 120, editable: true },
-		{ field: "past", headerName: "Past", width: 150, editable: true },
-		{ field: "present", headerName: "Present", width: 150, editable: true },
-		{ field: "future", headerName: "Future", width: 150, editable: true },
-		{ field: "pronoun", headerName: "Pronoun", width: 100, editable: true },
-		{ field: "sentence_ar", headerName: "Sentence (Arabic)", width: 250, editable: true },
-		{ field: "sentence_he", headerName: "Sentence (Hebrew)", width: 250, editable: true },
-	]
+	const handleSave = async () => {
+		setLoading(true)
+		const flatRow = { ...currentWord, ...currentWord.verb_data }
+		delete flatRow.verb_data
+		if (currentWord.category === "verb") delete flatRow.category
+
+		debugger
+
+		try {
+			if (currentWord.id) {
+				// Update
+				await supabase
+					.from(currentWord.category === "verb" ? "verbs" : "words")
+					.update(flatRow)
+					.eq("id", currentWord.id)
+
+				setWords(prev => prev.map(w => (w.id === currentWord.id ? { ...w, ...currentWord } : w)))
+
+				enqueueSnackbar("Updated successfully!", { variant: "success" })
+			} else {
+				// Insert
+				const { data, error } = await supabase
+					.from(currentWord.category === "verb" ? "verbs" : "words")
+					.insert([flatRow])
+					.select()
+					.single()
+
+				if (error) throw error
+
+				setWords(prev => [...prev, data])
+
+				enqueueSnackbar("Added successfully!", { variant: "success" })
+			}
+		} catch (error) {
+			console.error(error)
+			enqueueSnackbar("Something went wrong.", { variant: "error" })
+		}
+		setLoading(false)
+	}
 
 	return (
 		<Box p={2}>
-			<Box mb={2} textAlign={"center"}>
-				<Button onClick={() => setMode("words")}>Words</Button>
-				<Button onClick={() => setMode("verbs")}>Verbs</Button>
+			{/* Search Dropdown + Add New */}
+			<Box display='flex' gap={2} mb={3}>
+				<RtlTextField
+					size='small'
+					select
+					label='בחר מילה'
+					value={selectedWordId || ""}
+					onChange={e => handleSelectWord(e.target.value)}
+					fullWidth
+				>
+					{words.map(word => (
+						<MenuItem dir='rtl' key={word.id} value={word.id}>
+							{word.hebrew}
+						</MenuItem>
+					))}
+				</RtlTextField>
+
+				<Button sx={{ width: "50%" }} variant='outlined' onClick={handleAddNew}>
+					{"הוסף חדש"}
+				</Button>
 			</Box>
 
-			<Box
-				sx={{
-					width: "100vw",
-					height: "80vh", // << important!
-					overflowX: "auto",
-				}}
-			>
-				<DataGrid
-					rows={words.filter(w => (mode === "words" ? w.category !== "verb" : w.category === "verb"))}
-					columns={mode === "words" ? wordColumns : verbColumns}
-					editMode='row' // <<< This replaces experimentalFeatures
-					processRowUpdate={handleRowEdit}
-					sx={{
-						width: "100%",
-						"& .MuiDataGrid-columnHeaders": {
-							position: "sticky",
-							top: 0,
-							backgroundColor: "background.default",
-							zIndex: 2,
-						},
-					}}
-					autoHeight={false} // << IMPORTANT: must be false!
+			{/* Form */}
+			<Box display='flex' flexDirection='column' gap={1.5}>
+				<RtlTextField
+					label='ערבית'
+					size='small'
+					value={currentWord.arabic || ""}
+					onChange={e => setCurrentWord({ ...currentWord, arabic: e.target.value })}
+					fullWidth
 				/>
+
+				<RtlTextField
+					label='עברית'
+					size='small'
+					value={currentWord.hebrew || ""}
+					onChange={e => setCurrentWord({ ...currentWord, hebrew: e.target.value })}
+					fullWidth
+				/>
+
+				<RtlTextField
+					select
+					label='קטגוריה'
+					size='small'
+					value={currentWord.category || ""}
+					onChange={e => {
+						const newCategory = e.target.value as Word["category"]
+						setCurrentWord(prev => ({
+							...prev,
+							category: newCategory,
+							verb_data: newCategory === "verb" ? {} : undefined,
+						}))
+					}}
+					fullWidth
+				>
+					{categories
+						.filter((_, idx) => idx)
+						.map(category => (
+							<MenuItem dir='rtl' value={category.value}>
+								{category.label}
+							</MenuItem>
+						))}
+				</RtlTextField>
+
+				{currentWord.category === "verb" && (
+					<>
+						<RtlTextField
+							label='שורש'
+							size='small'
+							value={currentWord.verb_data?.root || ""}
+							onChange={e =>
+								setCurrentWord(prev => ({
+									...prev,
+									verb_data: { ...prev.verb_data, root: e.target.value },
+								}))
+							}
+							fullWidth
+						/>
+
+						<RtlTextField
+							label='בניין'
+							size='small'
+							value={currentWord.verb_data?.binyan || ""}
+							onChange={e =>
+								setCurrentWord(prev => ({
+									...prev,
+									verb_data: { ...prev.verb_data, binyan: e.target.value },
+								}))
+							}
+							fullWidth
+						/>
+
+						<RtlTextField
+							label='עבר'
+							size='small'
+							value={currentWord.verb_data?.past || ""}
+							onChange={e =>
+								setCurrentWord(prev => ({
+									...prev,
+									verb_data: { ...prev.verb_data, past: e.target.value },
+								}))
+							}
+							fullWidth
+						/>
+
+						<RtlTextField
+							label='הווה'
+							size='small'
+							value={currentWord.verb_data?.present || ""}
+							onChange={e =>
+								setCurrentWord(prev => ({
+									...prev,
+									verb_data: { ...prev.verb_data, present: e.target.value },
+								}))
+							}
+							fullWidth
+						/>
+
+						<RtlTextField
+							label='עתיד'
+							size='small'
+							value={currentWord.verb_data?.future || ""}
+							onChange={e =>
+								setCurrentWord(prev => ({
+									...prev,
+									verb_data: { ...prev.verb_data, future: e.target.value },
+								}))
+							}
+							fullWidth
+						/>
+
+						<RtlTextField
+							label='שייכות'
+							size='small'
+							value={currentWord.verb_data?.pronoun || ""}
+							onChange={e =>
+								setCurrentWord(prev => ({
+									...prev,
+									verb_data: { ...prev.verb_data, pronoun: e.target.value },
+								}))
+							}
+							fullWidth
+						/>
+					</>
+				)}
+
+				<RtlTextField
+					label='משפט בערבית'
+					size='small'
+					value={currentWord.sentence_ar || ""}
+					onChange={e => setCurrentWord({ ...currentWord, sentence_ar: e.target.value })}
+					fullWidth
+				/>
+
+				<RtlTextField
+					label='משפט בעברית'
+					size='small'
+					value={currentWord.sentence_he || ""}
+					onChange={e => setCurrentWord({ ...currentWord, sentence_he: e.target.value })}
+					fullWidth
+				/>
+
+				<Button variant='contained' onClick={handleSave} disabled={loading}>
+					{currentWord.id ? "Edit" : "Save"}
+				</Button>
 			</Box>
 		</Box>
 	)

@@ -3,21 +3,22 @@ import { useWords } from "../context/WordsContext"
 import { Chip } from "@mui/material"
 
 const categoryLabels: Record<string, string> = {
-	greeting: "🗣️ Greetings",
-	verb: '📚 Verbs',
-	noun: "📦 Nouns",
-	adjective: "🎯 Adjectives",
-	color: "🎨 Colors",
-	possessive: "👤 Possessives",
-	question: "❓ Questions",
-	expression: "💬 Expressions",
+	greeting: "🗣️ ברכות",
+	verb: "📚 פעלים",
+	noun: "📦 שמות עצם",
+	adjective: "🎯 שמות תואר",
+	color: "🎨 צבעים",
+	possessive: "👤 שייכות",
+	question: "❓ שאלות",
+	expression: "💬 ביטויים",
+	number: "מספרים",
 }
 
 export const CategoryProgress = () => {
 	const { categoryProgress } = useWords()
 
 	return (
-		<Stack direction='row' justifyContent='center' flexWrap='wrap' gap={1} pb={2}>
+		<Stack flexDirection='row' justifyContent='center' flexWrap='wrap' gap={1} pb={2}>
 			{categoryProgress.map(({ category, total, memorized }) => {
 				const label = categoryLabels[category] || category
 				return (
