@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import supabase from "../lib/supabaseClient"
+import { shuffleArray } from "../utils/helpers"
 
 type WordCategory = "all" | "verb" | "noun" | "adjective" | "greeting" | "possessive" | "number" | "question" | "expression" | "color"
 
@@ -76,7 +77,9 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 				  }))
 				: []
 
-			setWords([...wordItems, ...verbItems])
+			const fetchedWords = [...wordItems, ...verbItems]
+			const shuffledWords = shuffleArray(fetchedWords)
+			setWords(shuffledWords)
 		}
 		fetchWords()
 	}, [])
