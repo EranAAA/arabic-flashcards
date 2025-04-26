@@ -9,7 +9,6 @@ export const Logo = () => {
 			sx={{
 				width: 130,
 				mx: "auto",
-				py: 2,
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center",

@@ -29,7 +29,7 @@ export const CategoryFilter = () => {
 					sx={{ textTransform: "capitalize" }}
 				>
 					{categories.map(cat => (
-						<MenuItem key={cat.value} value={cat.value} sx={{ textTransform: "capitalize", direction: "ltr" }}>
+						<MenuItem key={cat.value} value={cat.value} sx={{ textTransform: "capitalize", direction: "rtl" }}>
 							{cat.label}
 						</MenuItem>
 					))}

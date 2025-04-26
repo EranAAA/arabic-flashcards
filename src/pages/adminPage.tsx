@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
-import { Box, Button, MenuItem } from "@mui/material"
+import { Box, Button, MenuItem, Stack } from "@mui/material"
 import { useSnackbar } from "notistack"
 import { useWords, Word } from "../context/WordsContext"
 import supabase from "../lib/supabaseClient"
@@ -170,83 +170,82 @@ export default function AdminPage() {
 
 				{currentWord.category === "verb" && (
 					<>
-						<RtlTextField
-							label='שורש'
-							size='small'
-							value={currentWord.verb_data?.root || ""}
-							onChange={e =>
-								setCurrentWord(prev => ({
-									...prev,
-									verb_data: { ...prev.verb_data, root: e.target.value },
-								}))
-							}
-							fullWidth
-						/>
+						<Stack flexDirection={"row"} gap={"8px"}>
+							<RtlTextField
+								label='שורש'
+								size='small'
+								value={currentWord.verb_data?.root || ""}
+								onChange={e =>
+									setCurrentWord(prev => ({
+										...prev,
+										verb_data: { ...prev.verb_data, root: e.target.value },
+									}))
+								}
+								fullWidth
+							/>
 
-						<RtlTextField
-							label='בניין'
-							size='small'
-							value={currentWord.verb_data?.binyan || ""}
-							onChange={e =>
-								setCurrentWord(prev => ({
-									...prev,
-									verb_data: { ...prev.verb_data, binyan: e.target.value },
-								}))
-							}
-							fullWidth
-						/>
+							<RtlTextField
+								label='בניין'
+								size='small'
+								value={currentWord.verb_data?.binyan || ""}
+								onChange={e =>
+									setCurrentWord(prev => ({
+										...prev,
+										verb_data: { ...prev.verb_data, binyan: e.target.value },
+									}))
+								}
+								fullWidth
+							/>
+						</Stack>
 
-						<RtlTextField
-							label='עבר'
-							size='small'
-							value={currentWord.verb_data?.past || ""}
-							onChange={e =>
-								setCurrentWord(prev => ({
-									...prev,
-									verb_data: { ...prev.verb_data, past: e.target.value },
-								}))
-							}
-							fullWidth
-						/>
-
-						<RtlTextField
-							label='הווה'
-							size='small'
-							value={currentWord.verb_data?.present || ""}
-							onChange={e =>
-								setCurrentWord(prev => ({
-									...prev,
-									verb_data: { ...prev.verb_data, present: e.target.value },
-								}))
-							}
-							fullWidth
-						/>
-
-						<RtlTextField
-							label='עתיד'
-							size='small'
-							value={currentWord.verb_data?.future || ""}
-							onChange={e =>
-								setCurrentWord(prev => ({
-									...prev,
-									verb_data: { ...prev.verb_data, future: e.target.value },
-								}))
-							}
-							fullWidth
-						/>
-
-						<RtlTextField
-							label='שייכות'
-							size='small'
-							value={currentWord.verb_data?.pronoun || ""}
-							onChange={e =>
-								setCurrentWord(prev => ({
-									...prev,
-									verb_data: { ...prev.verb_data, pronoun: e.target.value },
-								}))
-							}
-							fullWidth
-						/>
+						<Stack flexDirection={"row"} gap={"8px"}>
+							<RtlTextField
+								label='עבר'
+								size='small'
+								value={currentWord.verb_data?.past || ""}
+								onChange={e =>
+									setCurrentWord(prev => ({
+										...prev,
+										verb_data: { ...prev.verb_data, past: e.target.value },
+									}))
+								}
+							/>
+							<RtlTextField
+								label='שייכות'
+								size='small'
+								value={currentWord.verb_data?.pronoun || ""}
+								onChange={e =>
+									setCurrentWord(prev => ({
+										...prev,
+										verb_data: { ...prev.verb_data, pronoun: e.target.value },
+									}))
+								}
+							/>
+						</Stack>
+						<Stack flexDirection={"row"} gap={"8px"}>
+							<RtlTextField
+								label='הווה'
+								size='small'
+								value={currentWord.verb_data?.present || ""}
+								onChange={e =>
+									setCurrentWord(prev => ({
+										...prev,
+										verb_data: { ...prev.verb_data, present: e.target.value },
+									}))
+								}
+							/>
+							<RtlTextField
+								label='עתיד'
+								size='small'
+								value={currentWord.verb_data?.future || ""}
+								onChange={e =>
+									setCurrentWord(prev => ({
+										...prev,
+										verb_data: { ...prev.verb_data, future: e.target.value },
+									}))
+								}
+							/>
+						</Stack>
 					</>
 				)}
 

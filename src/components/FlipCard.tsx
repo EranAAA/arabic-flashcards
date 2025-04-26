@@ -20,7 +20,7 @@ const CardWrapper = styled(Box)(() => ({
 	height: "240px",
 	margin: "0 auto",
 	cursor: "pointer",
-	direction: "ltr",
+	direction: "rtl",
 }))
 
 const CardInner = styled(Box, {
