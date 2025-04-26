@@ -44,8 +44,6 @@ export default function AdminPage() {
 		delete flatRow.verb_data
 		if (currentWord.category === "verb") delete flatRow.category
 
-		debugger
-
 		try {
 			if (currentWord.id) {
 				// Update
@@ -75,6 +73,32 @@ export default function AdminPage() {
 			console.error(error)
 			enqueueSnackbar("Something went wrong.", { variant: "error" })
 		}
+		setLoading(false)
+	}
+
+	const handleDelete = async () => {
+		if (!currentWord.id) return
+		const confirm = window.confirm("האם אתה בטוח?")
+		if (!confirm) return
+
+		setLoading(true)
+
+		try {
+			await supabase
+				.from(currentWord.category === "verb" ? "verbs" : "words")
+				.delete()
+				.eq("id", currentWord.id)
+
+			setWords(prev => prev.filter(w => w.id !== currentWord.id))
+			setCurrentWord({})
+			setSelectedWordId(null)
+
+			enqueueSnackbar("Deleted successfully!", { variant: "success" })
+		} catch (error) {
+			console.error(error)
+			enqueueSnackbar("Something went wrong.", { variant: "error" })
+		}
+
 		setLoading(false)
 	}
 
@@ -245,6 +269,11 @@ export default function AdminPage() {
 				<Button variant='contained' onClick={handleSave} disabled={loading}>
 					{currentWord.id ? "Edit" : "Save"}
 				</Button>
+				{currentWord.id && (
+					<Button variant='outlined' color='error' onClick={handleDelete} disabled={loading}>
+						Delete
+					</Button>
+				)}
 			</Box>
 		</Box>
 	)
