@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Box, Button, Stack, Typography } from "@mui/material"
 import BookmarkIcon from "@mui/icons-material/Bookmark"
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"
