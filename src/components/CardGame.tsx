@@ -15,13 +15,14 @@ export const CardGame = () => {
 
 	const totalWords = filteredWords.length
 	const memorizedWords = filteredWords.filter(w => w.is_memorized).length
-	// const unmemorizedWords = totalWords - memorizedWords
 
 	const showNextWord = () => {
+		setFlipped(false)
 		setCurrentIndex(prev => (prev + 1) % filteredWords.length)
 	}
 
 	const showPreviousWord = () => {
+		setFlipped(false)
 		setCurrentIndex(prev => (prev === 0 ? filteredWords.length - 1 : prev - 1))
 	}
 

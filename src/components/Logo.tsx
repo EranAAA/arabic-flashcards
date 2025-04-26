@@ -20,9 +20,9 @@ export const Logo = () => {
 				src={logo}
 				alt='Arabic Flashcards Logo'
 				style={{
-					maxWidth: "100%",
+					maxWidth: "80%",
 					height: "auto",
-					filter: theme.palette.mode === "dark" ? "brightness(1.3)" : "none",
+					filter: theme.palette.mode === "dark" ? "brightness(8.5)" : "none",
 				}}
 			/>
 		</Box>

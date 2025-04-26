@@ -9,7 +9,7 @@ export default function App() {
 	return (
 		<AppThemeProvider>
 			<WordsProvider>
-				<Container sx={{ height: "100vh", display: "flex", flexDirection: "column", gap: "3%", justifyontent: "flex-start" }}>
+				<Container sx={{ height: "100vh", display: "flex", flexDirection: "column", justifyontent: "flex-start" }}>
 					<ThemeToggle />
 					<Logo />
 					<CardGame />
