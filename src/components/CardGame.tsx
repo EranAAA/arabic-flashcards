@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Box, Button, Typography } from "@mui/material"
+import { Box, Button, Stack, Typography } from "@mui/material"
 import BookmarkIcon from "@mui/icons-material/Bookmark"
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder"
 import { useWords } from "../context/WordsContext"
@@ -10,31 +10,19 @@ import { CategoryProgress } from "./CategoryProgress"
 export const CardGame = () => {
 	const { filteredWords, markAsMemorized } = useWords()
 
-	const [currentIndex, setCurrentIndex] = useState<number | null>(null)
+	const [currentIndex, setCurrentIndex] = useState<number>(0)
 	const [flipped, setFlipped] = useState(false)
 
 	const totalWords = filteredWords.length
 	const memorizedWords = filteredWords.filter(w => w.is_memorized).length
 	// const unmemorizedWords = totalWords - memorizedWords
 
-	const getRandomIndex = () => {
-		if (filteredWords.length === 0) return null
-		const randomWord = filteredWords[Math.floor(Math.random() * filteredWords.length)]
-		return filteredWords.findIndex(w => w.id === randomWord.id)
+	const showNextWord = () => {
+		setCurrentIndex(prev => (prev + 1) % filteredWords.length)
 	}
 
-	useEffect(() => {
-		if (filteredWords.length > 0) {
-			setCurrentIndex(getRandomIndex())
-		}
-	}, [filteredWords])
-
-	const showNextCard = () => {
-		setFlipped(false)
-
-		setTimeout(() => {
-			setCurrentIndex(getRandomIndex())
-		}, 100) // matches flip animation time
+	const showPreviousWord = () => {
+		setCurrentIndex(prev => (prev === 0 ? filteredWords.length - 1 : prev - 1))
 	}
 
 	const currentWord = currentIndex !== null ? filteredWords[currentIndex] : null
@@ -58,6 +46,7 @@ export const CardGame = () => {
 						flipped={flipped}
 						onFlip={() => setFlipped(prev => !prev)}
 						isMemorized={currentWord.is_memorized}
+						verbData={currentWord?.verb_data}
 					/>
 
 					<Box mt={2}>
@@ -78,11 +67,14 @@ export const CardGame = () => {
 			)}
 
 			{/* ✅ Always show the button */}
-			<Box mt={3}>
-				<Button size='small' variant='contained' onClick={showNextCard} disabled={filteredWords.length === 0}>
-					Next Word
+			<Stack mt={3} sx={{ flexDirection: "row", justifyContent: "center", gap: "5px" }}>
+				<Button sx={{ width: "100px" }} size='small' variant='contained' onClick={showPreviousWord}>
+					Previous
 				</Button>
-			</Box>
+				<Button sx={{ width: "100px" }} size='small' variant='contained' onClick={showNextWord}>
+					Next
+				</Button>
+			</Stack>
 		</Box>
 	)
 }

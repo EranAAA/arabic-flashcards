@@ -3,15 +3,25 @@ import supabase from "../lib/supabaseClient"
 
 type WordCategory = "all" | "verb" | "noun" | "adjective" | "greeting" | "possessive" | "number" | "question" | "expression" | "color"
 
-type Word = {
+export type Word = {
 	id: string
 	arabic: string
 	hebrew: string
-	is_memorized?: boolean
 	category?: WordCategory
+	is_memorized?: boolean
 	sentence_ar?: string
 	sentence_he?: string
- } 
+	verb_data?: VerbData
+}
+
+export type VerbData = {
+	root?: string
+	binyan?: string
+	past?: string
+	present?: string
+	future?: string
+	pronoun?: string
+}
 
 type CategoryProgress = {
 	category: WordCategory
@@ -49,8 +59,24 @@ export const WordsProvider = ({ children }: { children: React.ReactNode }) => {
 
 	useEffect(() => {
 		const fetchWords = async () => {
-			const { data, error } = await supabase.from("words").select("*")
-			if (!error) setWords(data || [])
+			const [wordsResult, verbsResult] = await Promise.all([supabase.from("words").select("*"), supabase.from("verbs").select("*")])
+			const wordItems: Word[] = wordsResult?.data?.length ? [...wordsResult.data] : []
+			const verbItems: Word[] = verbsResult?.data?.length
+				? verbsResult.data.map(row => ({
+						...row,
+						category: "verb",
+						verb_data: {
+							root: row.root,
+							binyan: row.binyan,
+							past: row.past,
+							present: row.present,
+							future: row.future,
+							pronoun: row.pronoun,
+						},
+				  }))
+				: []
+
+			setWords([...wordItems, ...verbItems])
 		}
 		fetchWords()
 	}, [])

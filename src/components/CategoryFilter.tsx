@@ -12,17 +12,6 @@ const categories = [
 	{ value: "question", label: "question (שאלות)" },
 	{ value: "expression", label: "expression (ביטויים)" },
 ]
-// const categories = [
-// 	{ value: "all", label: "הכול" },
-// 	{ value: "greeting", label: "ברכות" },
-// 	{ value: "verb", label: "פעלים" },
-// 	{ value: "noun", label: "שמות עצם" },
-// 	{ value: "adjective", label: "תארים" },
-// 	{ value: "color", label: "צבעים" },
-// 	{ value: "possessive", label: "שייכות" },
-// 	{ value: "question", label: "שאלות" },
-// 	{ value: "expression", label: "ביטויים" },
-// ]
 
 export const CategoryFilter = () => {
 	const { selectedCategory, setSelectedCategory } = useWords()

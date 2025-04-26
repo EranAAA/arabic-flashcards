@@ -4,7 +4,7 @@ import { Chip } from "@mui/material"
 
 const categoryLabels: Record<string, string> = {
 	greeting: "🗣️ Greetings",
-	verb: "📚 Verbs",
+	verb: '📚 Verbs',
 	noun: "📦 Nouns",
 	adjective: "🎯 Adjectives",
 	color: "🎨 Colors",
@@ -17,7 +17,7 @@ export const CategoryProgress = () => {
 	const { categoryProgress } = useWords()
 
 	return (
-		<Stack direction='row' justify-content='center' flexWrap='wrap' gap={1} pb={2}>
+		<Stack direction='row' justifyContent='center' flexWrap='wrap' gap={1} pb={2}>
 			{categoryProgress.map(({ category, total, memorized }) => {
 				const label = categoryLabels[category] || category
 				return (

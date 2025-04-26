@@ -1,5 +1,6 @@
 import React from "react"
-import { Box, Typography, styled, Button } from "@mui/material"
+import { Box, Typography, styled, Stack } from "@mui/material"
+import { VerbData } from "../context/WordsContext"
 
 type FlipCardProps = {
 	arabic: string
@@ -9,6 +10,7 @@ type FlipCardProps = {
 	isMemorized?: boolean // ✅ NEW
 	sentence_ar?: string
 	sentence_he?: string
+	verbData?: VerbData
 }
 
 const CardWrapper = styled(Box)(() => ({
@@ -29,6 +31,7 @@ const CardInner = styled(Box, {
 	transition: "transform 0.6s",
 	transformStyle: "preserve-3d",
 	transform: flipped ? "rotateY(180deg)" : "none",
+	direction: "rtl",
 }))
 
 const CardFace = styled(Box)(({ theme }) => ({
@@ -77,16 +80,18 @@ const Back = styled(CardFace)(({ theme }) => ({
 	transform: "rotateY(180deg)",
 }))
 
-const CheckTranslateButton = styled(Button)(() => ({
+const Info = styled("div")(({ bottom, right, top, left }: { bottom?: number; right?: number; top?: number; left?: number }) => ({
 	position: "absolute",
-	bottom: 0,
-	right: 0,
-	mt: 1,
+	bottom: bottom ?? "unset",
+	right: right ?? "unset",
+	top: top ?? "unset",
+	left: left ?? "unset",
 	color: "black",
-	fontSize: "10px",
+	padding: "10px",
+	fontSize: "14px",
 }))
 
-export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, sentence_ar, sentence_he, isMemorized, flipped, onFlip }) => {
+export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, sentence_ar, sentence_he, isMemorized, verbData, flipped, onFlip }) => {
 	const handleCheckTranslate = (e: any) => {
 		e.stopPropagation() // so it doesn't flip
 		window.open(`https://milon.madrasafree.com/?searchString=${encodeURIComponent(hebrew)}`, "_blank")
@@ -97,15 +102,35 @@ export const FlipCard: React.FC<FlipCardProps> = ({ arabic, hebrew, sentence_ar,
 
 			<CardInner flipped={flipped}>
 				<Front>
+					<Info left={0} top={0}>
+						{verbData?.binyan}
+					</Info>
+					<Info right={0} top={0}>
+						{verbData?.pronoun}
+					</Info>
+					<Info left={0} bottom={0}>
+						{verbData?.root}
+					</Info>
+
 					<Typography variant='h5'>{arabic}</Typography>
+					{verbData && (
+						<Stack>
+							<Typography variant='body2' color='inherit' sx={{ fontStyle: "italic", direction: "rtl" }}>
+								{"הווה: " + verbData.present}
+							</Typography>
+							<Typography variant='body2' color='inherit' sx={{ fontStyle: "italic", direction: "rtl" }}>
+								{"עתיד: " + verbData.future}
+							</Typography>
+						</Stack>
+					)}
 					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic", direction: "rtl" }}>
 						{sentence_ar}
 					</Typography>
 				</Front>
 				<Back>
-					<CheckTranslateButton size='small' onClick={handleCheckTranslate}>
-						Check Translate
-					</CheckTranslateButton>
+					<Info right={0} bottom={0} onClick={handleCheckTranslate}>
+						{"בדוק מילה"}
+					</Info>
 					<Typography variant='h5'>{hebrew}</Typography>
 					<Typography variant='body2' color='inherit' sx={{ mt: 2, fontStyle: "italic", direction: "rtl" }}>
 						{sentence_he}
